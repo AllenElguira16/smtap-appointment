@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model User {
+  id        String   @id @unique @default(uuid())
+  name      String
+  email     String   @unique
+  address   String
+  password  String
+  gender    String
+  createdAt DateTime @default(now())
+  role      String   @default("user")
+
+  appointment Appointment[]
+}
+
+model Appointment {
+  id        String          @id @unique @default(uuid())
+  type      AppointmentEnum
+  info      Json
+  userId    String
+  date      DateTime
+  paid      Boolean         @default(false)
+  approved  Boolean         @default(false)
+  createdAt DateTime        @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+enum AppointmentEnum {
+  WEDDING
+  BURIAL
+  BAPTISM
+  OTHERS
+}
