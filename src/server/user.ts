@@ -146,7 +146,7 @@ export const userRouter = router({
           gender: input.gender,
           address: input.address,
           password: await bcrypt.hash(input.password, salt),
-          role: 'user',
+          // role: 'user',
         },
       });
 
