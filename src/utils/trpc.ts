@@ -61,17 +61,17 @@ export const trpc = createTRPCNext<AppRouter, SSRContext>({
       },
     };
   },
-  ssr: true,
-  responseMeta(opts) {
-    const ctx = opts.ctx as SSRContext;
+  ssr: false,
+  // responseMeta(opts) {
+  //   const ctx = opts.ctx as SSRContext;
 
-    if (ctx.status) return { status: ctx.status };
+  //   if (ctx.status) return { status: ctx.status };
 
-    const error = opts.clientErrors[0];
-    if (error) return { status: error.data?.httpStatus ?? 500 };
+  //   const error = opts.clientErrors[0];
+  //   if (error) return { status: error.data?.httpStatus ?? 500 };
 
-    return {};
-  },
+  //   return {};
+  // },
 });
 
 export type RouterInput = inferRouterInputs<AppRouter>;
