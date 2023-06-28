@@ -5,18 +5,18 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: "/",
-        destination: "/auth/sign-in",
+        source: '/',
+        destination: '/auth/sign-in',
         permanent: true,
       },
       {
-        source: "/user",
-        destination: "/user/appointment",
+        source: '/user',
+        destination: '/user/dashboard',
         permanent: true,
       },
       {
-        source: "/admin",
-        destination: "/admin/users",
+        source: '/admin',
+        destination: '/admin/dashboard',
         permanent: true,
       },
     ];
