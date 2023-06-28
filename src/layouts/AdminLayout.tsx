@@ -19,6 +19,12 @@ export function AdminLayout({ children }: PropsWithChildren) {
       nav={
         <ul className="menu p-2">
           <li>
+            <Link href="/admin/dashboard">
+              <i className="material-icons">dashboard</i>
+              <small className="font-bold">Dashboard</small>
+            </Link>
+          </li>
+          <li>
             <Link href="/admin/users">
               <i className="material-icons">person_add</i>
               <small className="font-bold">Users</small>

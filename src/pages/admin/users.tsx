@@ -1,9 +1,24 @@
+import { EditModal } from '@/components';
 import { AdminLayout } from '@/layouts';
+import { alertState } from '@/state';
 import { formatDate, trpc } from '@/utils';
 import { nanoid } from 'nanoid';
+import { useSetRecoilState } from 'recoil';
 
 export default function Users() {
-  const { data: users } = trpc.user.getAll.useQuery();
+  const { data: users, refetch } = trpc.user.getAll.useQuery();
+
+  const setAlert = useSetRecoilState(alertState);
+  const deleteMutation = trpc.user.delete.useMutation();
+
+  const handleDeleteUser = (id: string) => async () => {
+    const { status, message } = await deleteMutation.mutateAsync(id);
+
+    if (status) {
+      setAlert({ isOpen: true, message, type: 'success' });
+      await refetch();
+    }
+  };
 
   return (
     <AdminLayout>
@@ -31,10 +46,18 @@ export default function Users() {
                     <td>{formatDate(user.createdAt)}</td>
                     <td>
                       <div className="flex gap-2">
-                        <button type="button" className="btn btn-info">
+                        <label
+                          htmlFor="edit-profile-modal"
+                          className="btn btn-info"
+                        >
                           <i className="material-icons">edit</i>
-                        </button>
-                        <button type="button" className="btn btn-warning">
+                        </label>
+                        <EditModal user={user} />
+                        <button
+                          type="button"
+                          className="btn btn-warning"
+                          onClick={handleDeleteUser(user.id)}
+                        >
                           <i className="material-icons">delete</i>
                         </button>
                       </div>

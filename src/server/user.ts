@@ -2,6 +2,7 @@ import { procedure, router } from '@/rpc';
 import { editSchema, signInSchema, signUpSchema } from '@/schema';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import { z } from 'zod';
 
 const prisma = new PrismaClient();
 
@@ -101,10 +102,17 @@ export const userRouter = router({
   }),
   getAll: procedure().query(async () => {
     return prisma.user.findMany({
+      where: {
+        NOT: {
+          role: 'admin',
+        },
+      },
       select: {
+        id: true,
         name: true,
         email: true,
         gender: true,
+        role: true,
         address: true,
         createdAt: true,
       },
@@ -156,6 +164,26 @@ export const userRouter = router({
       return {
         status: true,
         message: 'Edit Successful!',
+      };
+    }),
+  delete: procedure(true)
+    .input(z.string())
+    .mutation(async ({ input, ctx }) => {
+      if (!ctx.session.user)
+        return {
+          status: false,
+          message: 'You have no access, please login first',
+        };
+
+      await prisma.user.delete({
+        where: {
+          id: input,
+        },
+      });
+
+      return {
+        status: true,
+        message: 'Delete Successful!',
       };
     }),
 });

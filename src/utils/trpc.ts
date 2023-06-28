@@ -29,6 +29,14 @@ export const trpc = createTRPCNext<AppRouter, SSRContext>({
             url: `${getBaseUrl()}/api/trpc`,
           }),
         ],
+        queryClientConfig: {
+          defaultOptions: {
+            queries: {
+              refetchOnWindowFocus: false,
+              refetchOnMount: false,
+            },
+          },
+        },
       };
     }
 
